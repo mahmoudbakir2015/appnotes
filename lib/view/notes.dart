@@ -1,6 +1,6 @@
 import 'package:appnotes/view/homeSq.dart';
 import 'package:flutter/material.dart';
-import 'package:appnotes/model/sqfliteData.dart';
+import 'package:appnotes/model/sqflite.dart';
 
 import 'addNote.dart';
 

@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:appnotes/model/sqfliteData.dart';
+import 'package:appnotes/model/sqflite.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 class AddNotes extends StatefulWidget {
@@ -114,7 +114,8 @@ class _AddNotesState extends State<AddNotes> {
                   SizedBox(
                     height: 50,
                   ),
-                  TextFormField(keyboardType: TextInputType.text,
+                  TextFormField(
+                    keyboardType: TextInputType.text,
                     controller: headNote,
                     maxLength: 20,
                     minLines: 1,
@@ -135,7 +136,8 @@ class _AddNotesState extends State<AddNotes> {
                   SizedBox(
                     height: 5,
                   ),
-                  TextFormField(keyboardType: TextInputType.multiline,
+                  TextFormField(
+                    keyboardType: TextInputType.multiline,
                     controller: note,
                     maxLength: 200,
                     minLines: 3,

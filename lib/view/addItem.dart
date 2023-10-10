@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'homeSq.dart';
-import 'package:appnotes/model/sqfliteData.dart';
+import 'package:appnotes/model/sqflite.dart';
 
 class SqfTest extends StatelessWidget {
   TextEditingController name = TextEditingController();

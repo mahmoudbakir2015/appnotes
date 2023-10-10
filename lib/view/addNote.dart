@@ -1,8 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:appnotes/model/sqflite.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:hive/hive.dart';
 
+// ignore: must_be_immutable
 class AddNotes extends StatefulWidget {
+  final Box box;
+  const AddNotes({
+    super.key,
+    required this.box,
+  });
+
   @override
   State<AddNotes> createState() => _AddNotesState();
 }
@@ -14,65 +21,52 @@ class _AddNotesState extends State<AddNotes> {
 
   TextEditingController date = TextEditingController();
 
-  SqfDb sqfDb = SqfDb();
+  GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: Color(0xFF000000),
+        backgroundColor: const Color(0xFF000000),
         leading: Row(
           children: [
             GestureDetector(
               onTap: () async {
                 try {
-                  if (headNote.text == "" &&
-                      note.text == "" &&
-                      date.text == "") {
-                    Fluttertoast.showToast(
-                        msg: "pls fill all field",
-                        toastLength: Toast.LENGTH_SHORT,
-                        gravity: ToastGravity.CENTER,
-                        timeInSecForIosWeb: 1,
-                        backgroundColor: Color(0xFFd8b654),
-                        textColor: Color(0xFF1c1c1e),
-                        fontSize: 16.0);
+                  if (formKey.currentState?.validate() != null) {
+                    widget.box.addAll([
+                      {
+                        'headNote': headNote.text,
+                        'note': note.text,
+                        'date': date.text,
+                      }
+                    ]);
+                    print(widget.box.get('headNote'));
                   } else {
-                    int response = await sqfDb.insertData('''
-                  INSERT INTO 'notes'(
-                  'headnote','note','date') 
-                  VALUES(
-                  '${headNote.text}',
-                  '${note.text}',
-                  '${date.text}'
-                  ) 
-                  ''');
-                    print(response);
-                    if (response.toInt() > 0) {
-                      setState(() {
-                        headNote.text = "";
-                        note.text = "";
-                        date.text = "";
-                      });
-                    }
+                    Fluttertoast.showToast(
+                      msg: "pls fill all field",
+                      toastLength: Toast.LENGTH_SHORT,
+                      gravity: ToastGravity.CENTER,
+                      timeInSecForIosWeb: 1,
+                      backgroundColor: const Color(0xFFd8b654),
+                      textColor: const Color(0xFF1c1c1e),
+                      fontSize: 16.0,
+                    );
                   }
                 } catch (e) {
                   Fluttertoast.showToast(
-                      msg: "${e}",
+                      msg: e.toString(),
                       toastLength: Toast.LENGTH_LONG,
                       gravity: ToastGravity.CENTER,
                       timeInSecForIosWeb: 1,
-                      backgroundColor: Color(0xFFd8b654),
-                      textColor: Color(0xFF1c1c1e),
+                      backgroundColor: const Color(0xFFd8b654),
+                      textColor: const Color(0xFF1c1c1e),
                       fontSize: 16.0);
                 }
               },
-              child: Text("Done"),
+              child: const Text("Done"),
             ),
-            SizedBox(
-              width: 1,
-            ),
-            Icon(
+            const Icon(
               Icons.settings,
               color: Color(0xFFd8b654),
             ),
@@ -83,7 +77,7 @@ class _AddNotesState extends State<AddNotes> {
             onTap: () {
               Navigator.pop(context);
             },
-            child: Row(
+            child: const Row(
               children: [
                 Text(
                   "Notes",
@@ -100,88 +94,112 @@ class _AddNotesState extends State<AddNotes> {
           ),
         ],
       ),
-      backgroundColor: Color(0xFF000000),
-      body: ListView(
-        children: [
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Card(
-              color: Colors.black12,
-              child: ListView(
-                shrinkWrap: true,
-                physics: NeverScrollableScrollPhysics(),
-                children: [
-                  SizedBox(
-                    height: 50,
-                  ),
-                  TextFormField(
-                    keyboardType: TextInputType.text,
-                    controller: headNote,
-                    maxLength: 20,
-                    minLines: 1,
-                    maxLines: 1,
-                    decoration: InputDecoration(
-                      filled: true,
-                      fillColor: Color(0xFF1c1c1e),
-                      hintText: "HeadNote",
-                      hintStyle: TextStyle(
-                        color: Colors.grey,
-                      ),
-                      prefixIcon: Icon(
-                        Icons.add,
-                        color: Colors.grey,
+      backgroundColor: const Color(0xFF000000),
+      body: Form(
+        key: formKey,
+        child: Column(
+          children: [
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Card(
+                color: Colors.black12,
+                child: ListView(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  children: [
+                    const SizedBox(
+                      height: 50,
+                    ),
+                    TextFormField(
+                      validator: (String? value) {
+                        if (value != null) {
+                          headNote.text = value;
+                          setState(() {});
+                        }
+                        return 'This empty doesnot empty';
+                      },
+                      keyboardType: TextInputType.text,
+                      controller: headNote,
+                      maxLength: 20,
+                      minLines: 1,
+                      maxLines: 1,
+                      decoration: const InputDecoration(
+                        filled: true,
+                        fillColor: Color(0xFF1c1c1e),
+                        hintText: "HeadNote",
+                        hintStyle: TextStyle(
+                          color: Colors.grey,
+                        ),
+                        prefixIcon: Icon(
+                          Icons.add,
+                          color: Colors.grey,
+                        ),
                       ),
                     ),
-                  ),
-                  SizedBox(
-                    height: 5,
-                  ),
-                  TextFormField(
-                    keyboardType: TextInputType.multiline,
-                    controller: note,
-                    maxLength: 200,
-                    minLines: 3,
-                    maxLines: 20,
-                    decoration: InputDecoration(
-                      filled: true,
-                      fillColor: Color(0xFF1c1c1e),
-                      hintText: "Note",
-                      hintStyle: TextStyle(
-                        color: Colors.grey,
-                      ),
-                      prefixIcon: Icon(
-                        Icons.add,
-                        color: Colors.grey,
+                    const SizedBox(
+                      height: 5,
+                    ),
+                    TextFormField(
+                      keyboardType: TextInputType.multiline,
+                      validator: (String? value) {
+                        if (value != null) {
+                          note.text = value;
+                          setState(() {});
+                        }
+                        return 'This empty doesnot empty';
+                      },
+                      controller: note,
+                      maxLength: 200,
+                      minLines: 3,
+                      maxLines: 20,
+                      decoration: const InputDecoration(
+                        filled: true,
+                        fillColor: Color(0xFF1c1c1e),
+                        hintText: "Note",
+                        hintStyle: TextStyle(
+                          color: Colors.grey,
+                        ),
+                        prefixIcon: Icon(
+                          Icons.add,
+                          color: Colors.grey,
+                        ),
                       ),
                     ),
-                  ),
-                  SizedBox(
-                    height: 5,
-                  ),
-                  TextFormField(
-                    keyboardType: TextInputType.datetime,
-                    controller: date,
-                    maxLength: 10,
-                    minLines: 1,
-                    maxLines: 1,
-                    decoration: InputDecoration(
-                      filled: true,
-                      fillColor: Color(0xFF1c1c1e),
-                      hintText: "Date",
-                      hintStyle: TextStyle(
-                        color: Colors.grey,
-                      ),
-                      prefixIcon: Icon(
-                        Icons.add,
-                        color: Colors.grey,
+                    const SizedBox(
+                      height: 5,
+                    ),
+                    TextFormField(
+                      validator: (String? value) {
+                        if (value != null) {
+                          date.text = value;
+                          setState(() {});
+                        }
+                        return 'This empty doesnot empty';
+                      },
+                      keyboardType: TextInputType.datetime,
+                      controller: date,
+                      maxLength: 10,
+                      minLines: 1,
+                      maxLines: 1,
+                      decoration: const InputDecoration(
+                        filled: true,
+                        fillColor: Color(0xFF1c1c1e),
+                        hintText: "Date",
+                        hintStyle: TextStyle(
+                          color: Colors.grey,
+                        ),
+                        prefixIcon: Icon(
+                          Icons.add,
+                          color: Colors.grey,
+                        ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }

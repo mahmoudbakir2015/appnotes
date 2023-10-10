@@ -1,20 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:hive/hive.dart';
 import 'addNote.dart';
 import 'notes.dart';
 
 class HomeSqf extends StatelessWidget {
+  HomeSqf({super.key});
+  late Box box;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Color(0xFF000000),
+      backgroundColor: const Color(0xFF000000),
       appBar: AppBar(
-        backgroundColor: Color(0xFF000000),
+        backgroundColor: const Color(0xFF000000),
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
         child: ListView(
           children: [
-            Text(
+            const Text(
               "Folders",
               style: TextStyle(
                 fontSize: 35,
@@ -24,7 +28,7 @@ class HomeSqf extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.all(8.0),
               child: TextFormField(
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   filled: true,
                   fillColor: Color(0xFF1c1c1e),
                   hintText: "search",
@@ -38,8 +42,8 @@ class HomeSqf extends StatelessWidget {
                 ),
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.all(15.0),
+            const Padding(
+              padding: EdgeInsets.all(15.0),
               child: Text(
                 "iDrive",
                 style: TextStyle(color: Colors.white),
@@ -57,7 +61,7 @@ class HomeSqf extends StatelessWidget {
                       ),
                     );
                   },
-                  child: Card(
+                  child: const Card(
                     color: Color(0xFF1c1c1e),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -103,7 +107,7 @@ class HomeSqf extends StatelessWidget {
                 height: 50,
                 child: GestureDetector(
                   onTap: () {},
-                  child: Card(
+                  child: const Card(
                     color: Color(0xFF1c1c1e),
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -146,27 +150,30 @@ class HomeSqf extends StatelessWidget {
           ],
         ),
       ),
-
       bottomNavigationBar: BottomNavigationBar(
         backgroundColor: Colors.black87,
         items: [
           BottomNavigationBarItem(
             label: "",
             icon: GestureDetector(
-              onTap: () {
+              onTap: () async {
+                box = await Hive.openBox('notes');
+                Hive.box('notes');
                 Navigator.of(context).push(
                   MaterialPageRoute(
-                    builder: (context) => AddNotes(),
+                    builder: (context) => AddNotes(
+                      box: box,
+                    ),
                   ),
                 );
               },
-              child: Icon(
+              child: const Icon(
                 Icons.edit_note,
                 color: Color(0xFFd8b654),
               ),
             ),
           ),
-          BottomNavigationBarItem(
+          const BottomNavigationBarItem(
             label: "",
             icon: Icon(
               Icons.refresh,

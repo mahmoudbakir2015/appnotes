@@ -1,3 +1,5 @@
+// ignore_for_file: depend_on_referenced_packages
+
 import 'package:path/path.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -16,7 +18,7 @@ class SqfDb {
   initialDb() async {
     String myDatabasePath = await getDatabasesPath();
     String path = join(myDatabasePath,
-        '${nameOfDataBase}.db'); //  path => database/nameOfDataBase.db
+        '$nameOfDataBase.db'); //  path => database/nameOfDataBase.db
     Database myDb = await openDatabase(path,
         onCreate: _onCreate, version: 1, onUpgrade: _onUpgrade);
     return myDb;
@@ -69,7 +71,7 @@ class SqfDb {
   myDeleteDatabase() async {
     String myDatabasePath = await getDatabasesPath();
     String path = join(myDatabasePath,
-        '${nameOfDataBase}.db'); //  path => database/nameOfDataBase.db
+        '$nameOfDataBase.db'); //  path => database/nameOfDataBase.db
     await deleteDatabase(path);
   }
 }

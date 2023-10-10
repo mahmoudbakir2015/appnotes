@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'homeSq.dart';
-import 'package:appnotes/model/sqflite.dart';
+import 'package:appnotes/helper/sqflite.dart';
 
 class SqfTest extends StatelessWidget {
   TextEditingController name = TextEditingController();
@@ -12,12 +12,14 @@ class SqfTest extends StatelessWidget {
   TextEditingController type = TextEditingController();
   SqfDb sqfDb = SqfDb();
 
+  SqfTest({super.key});
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       home: Scaffold(
         appBar: AppBar(
-          title: Center(
+          title: const Center(
             child: Text("insertData"),
           ),
         ),
@@ -26,48 +28,48 @@ class SqfTest extends StatelessWidget {
           child: ListView(
             children: [
               TextFormField(
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   label: Text("name"),
                 ),
                 keyboardType: TextInputType.name,
                 controller: name,
               ),
               TextFormField(
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   label: Text("count"),
                 ),
                 keyboardType: TextInputType.number,
                 controller: count,
               ),
               TextFormField(
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   label: Text("price"),
                 ),
                 keyboardType: TextInputType.number,
                 controller: price,
               ),
               TextFormField(
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   label: Text("parcode"),
                 ),
                 keyboardType: TextInputType.number,
                 controller: parcode,
               ),
               TextFormField(
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   label: Text("expire"),
                 ),
                 keyboardType: TextInputType.name,
                 controller: expire,
               ),
               TextFormField(
-                decoration: InputDecoration(
+                decoration: const InputDecoration(
                   label: Text("type"),
                 ),
                 keyboardType: TextInputType.name,
                 controller: type,
               ),
-              SizedBox(
+              const SizedBox(
                 height: 20,
               ),
               ElevatedButton(
@@ -103,7 +105,7 @@ class SqfTest extends StatelessWidget {
                         fontSize: 16.0);
                   }
                 },
-                child: Text("insertDate"),
+                child: const Text("insertDate"),
               ),
             ],
           ),

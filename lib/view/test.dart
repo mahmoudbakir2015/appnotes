@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 
+// ignore: must_be_immutable
 class Test extends StatelessWidget {
   Test({super.key});
   late Box box;

@@ -10,8 +10,8 @@ import '../notes/notes.dart';
 
 // ignore: must_be_immutable
 class Home extends StatelessWidget {
-  const Home({super.key, required this.box});
-  final Box box;
+  Home({super.key, required this.box});
+  late Box box;
 
   @override
   Widget build(BuildContext context) {

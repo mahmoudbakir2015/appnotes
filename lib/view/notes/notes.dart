@@ -28,18 +28,37 @@ class Notes extends StatelessWidget {
           ),
         ),
       ),
-      body: ListView(
-        children: const [
-          Text(
+      body: Column(
+        children: [
+          const Text(
             "Notes",
             style: TextStyle(
               fontSize: 35,
               color: MyColors.secondaryColor,
             ),
           ),
-          Padding(
+          const Padding(
             padding: EdgeInsets.all(8.0),
             child: SearchForm(),
+          ),
+          Expanded(
+            child: GridView.count(
+              primary: false,
+              padding: const EdgeInsets.all(20.0),
+              crossAxisSpacing: 10.0,
+              crossAxisCount: 2,
+              children: [
+                ListView.builder(
+                  shrinkWrap: true,
+                  physics: const NeverScrollableScrollPhysics(),
+                  itemBuilder: (context, index) {
+                    return Container(
+                      color: Colors.red,
+                    );
+                  },
+                ),
+              ],
+            ),
           ),
         ],
       ),

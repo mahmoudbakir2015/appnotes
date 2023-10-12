@@ -9,7 +9,6 @@ class NotesAdapter extends TypeAdapter<Note> {
       title: reader.readString(),
       date: reader.readString(),
       description: reader.readString(),
-      index: reader.readInt(),
       notesDeleted: reader.readList().cast<Note>(),
     );
   }
@@ -22,7 +21,6 @@ class NotesAdapter extends TypeAdapter<Note> {
     writer.writeString(obj.date);
     writer.writeString(obj.description);
     writer.writeString(obj.title);
-    writer.writeInt(obj.index);
     writer.writeList(obj.notesDeleted);
   }
 }

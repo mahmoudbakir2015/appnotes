@@ -1,5 +1,6 @@
 // ignore_for_file: file_names
 
+import 'package:appnotes/model/notes/notes.dart';
 import 'package:appnotes/view/add_notes/items.dart';
 import 'package:appnotes/view/home/home.dart';
 import 'package:flutter/material.dart';
@@ -26,6 +27,7 @@ class _AddNotesState extends State<AddNotes> {
   TextEditingController date = TextEditingController();
 
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
+  List notes = [];
 
   @override
   Widget build(BuildContext context) {
@@ -65,12 +67,21 @@ class _AddNotesState extends State<AddNotes> {
                       (headNote.text != '' &&
                           note.text != '' &&
                           date.text != '')) {
-                    widget.box.putAll({
-                      'headNote': headNote.text,
-                      'note': note.text,
-                      'date': date.text,
-                    });
-                    print(widget.box.get('headNote'));
+                    notes = [];
+                    notes.add(widget.box.add(
+                      Note(
+                          date: date.text,
+                          description: note.text,
+                          title: '',
+                          notesDeleted: []),
+
+                      //   {
+                      //   'headNote': headNote.text,
+                      //   'note': note.text,
+                      //   'date': date.text,
+                      // }
+                    ));
+                    print(note);
                   } else {
                     buildToast(error: "pls fill all field");
 

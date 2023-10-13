@@ -1,13 +1,13 @@
 import 'package:appnotes/constant/color.dart';
 import 'package:appnotes/controller/cubit/app_cubit.dart';
-import 'package:appnotes/shared/floating_button.dart';
-import 'package:appnotes/view/notes/items.dart';
+import 'package:appnotes/shared/widget/floating_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive/hive.dart';
 import '../../controller/cubit/app_states.dart';
-import '../../shared/bottom_app_bar.dart';
-import '../../shared/sarch.dart';
+import '../../shared/widget/bottom_app_bar.dart';
+import '../../shared/widget/note_card.dart';
+import '../../shared/widget/sarch.dart';
 
 // ignore: must_be_immutable
 class NotePage extends StatefulWidget {

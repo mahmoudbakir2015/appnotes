@@ -15,6 +15,7 @@ void main() async {
   Hive.registerAdapter(NotesAdapter());
   Bloc.observer = MyBlocObserver();
   Box box = await Hive.openBox(HiveConstants.noteBox);
+  Box boxDeleted = await Hive.openBox(HiveConstants.noteBoxDeleted);
   runApp(
     BlocProvider(
       create: (context) => AppCubit(),

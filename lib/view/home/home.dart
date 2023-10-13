@@ -1,9 +1,12 @@
 import 'package:appnotes/constant/color.dart';
+import 'package:appnotes/controller/cubit/app_cubit.dart';
+import 'package:appnotes/controller/cubit/app_states.dart';
 import 'package:appnotes/shared/floating_button.dart';
 import 'package:appnotes/shared/sarch.dart';
 import 'package:appnotes/view/deleted_notes/deleted_notes.dart';
 import 'package:appnotes/view/home/items.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive/hive.dart';
 import '../../shared/bottom_app_bar.dart';
 import '../notes/notes.dart';
@@ -38,20 +41,23 @@ class Home extends StatelessWidget {
                 style: TextStyle(color: MyColors.secondaryColor),
               ),
             ),
-            Folder(
-              onTap: () {
-                Navigator.of(context).push(
-                  MaterialPageRoute(
-                    builder: (context) => Notes(
-                      box: box,
+            BlocBuilder<AppCubit, AppStates>(builder: (context, state) {
+              AppCubit cubit = AppCubit.get(context);
+              return Folder(
+                onTap: () {
+                  Navigator.of(context).push(
+                    MaterialPageRoute(
+                      builder: (context) => NotePage(
+                        box: box,
+                      ),
                     ),
-                  ),
-                );
-              },
-              name: 'Notes',
-              icon: Icons.folder,
-              counter: '10',
-            ),
+                  );
+                },
+                name: 'Notes',
+                icon: Icons.folder,
+                counter: '${cubit.notesReturn.length}',
+              );
+            }),
             Folder(
               onTap: () {
                 Navigator.of(context).push(

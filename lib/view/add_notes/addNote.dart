@@ -1,9 +1,10 @@
 // ignore_for_file: file_names
 
-import 'package:appnotes/model/notes/notes.dart';
+import 'package:appnotes/controller/cubit/app_cubit.dart';
 import 'package:appnotes/view/add_notes/items.dart';
 import 'package:appnotes/view/home/home.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'package:hive/hive.dart';
 
@@ -27,7 +28,6 @@ class _AddNotesState extends State<AddNotes> {
   TextEditingController date = TextEditingController();
 
   GlobalKey<FormState> formKey = GlobalKey<FormState>();
-  List notes = [];
 
   @override
   Widget build(BuildContext context) {
@@ -67,21 +67,18 @@ class _AddNotesState extends State<AddNotes> {
                       (headNote.text != '' &&
                           note.text != '' &&
                           date.text != '')) {
-                    notes = [];
-                    notes.add(widget.box.add(
-                      Note(
-                          date: date.text,
-                          description: note.text,
-                          title: '',
-                          notesDeleted: []),
+                    BlocProvider.of<AppCubit>(context).addNote(
+                      title: headNote.text,
+                      description: note.text,
+                      date: date.text,
+                    );
 
-                      //   {
-                      //   'headNote': headNote.text,
-                      //   'note': note.text,
-                      //   'date': date.text,
-                      // }
-                    ));
-                    print(note);
+                    Navigator.of(context).pushAndRemoveUntil(
+                        MaterialPageRoute(
+                            builder: (context) => Home(
+                                  box: widget.box,
+                                )),
+                        (route) => false);
                   } else {
                     buildToast(error: "pls fill all field");
 

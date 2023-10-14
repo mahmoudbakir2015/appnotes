@@ -1,17 +1,17 @@
-class Note {
+class NoteModel {
   int index;
   String title;
   String description;
   String date;
-  Note({
+  NoteModel({
     required this.index,
     required this.date,
     required this.description,
     required this.title,
   });
 
-  Note decrementIndex() {
-    return Note(
+  NoteModel decrementIndex() {
+    return NoteModel(
       index: index - 1,
       date: date,
       description: description,

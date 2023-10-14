@@ -5,7 +5,7 @@ import 'package:flutter_datetime_picker_plus/flutter_datetime_picker_plus.dart';
 import 'package:hive/hive.dart';
 
 import '../../constant/hive_constant.dart';
-import '../../model/notes/notes.dart';
+import '../../model/notes/notes_model.dart';
 
 class AppCubit extends Cubit<AppStates> {
   AppCubit() : super(InitialAppState());
@@ -20,8 +20,8 @@ class AppCubit extends Cubit<AppStates> {
   final Box _box = Hive.box(HiveConstants.noteBox);
   final Box _boxNoteDeleted = Hive.box(HiveConstants.noteBoxDeleted);
 
-  List<Note> notesReturn = [];
-  List<Note> notesDeleted = [];
+  List<NoteModel> notesReturn = [];
+  List<NoteModel> notesDeleted = [];
 
   void addNote({
     required String title,
@@ -30,13 +30,13 @@ class AppCubit extends Cubit<AppStates> {
   }) {
     emit(LoadingAppAddState());
     try {
-      List<Note> notes = List.from(
+      List<NoteModel> notes = List.from(
         _box.get(
           HiveConstants.notesList,
           defaultValue: [],
         ),
-      ).cast<Note>();
-      notes.add(Note(
+      ).cast<NoteModel>();
+      notes.add(NoteModel(
         date: date,
         description: description,
         title: title,
@@ -57,13 +57,13 @@ class AppCubit extends Cubit<AppStates> {
   }) {
     emit(LoadingAppAddDeletedState());
     try {
-      List<Note> notes = List.from(
+      List<NoteModel> notes = List.from(
         _boxNoteDeleted.get(
           HiveConstants.notesDeletedList,
           defaultValue: [],
         ),
-      ).cast<Note>();
-      notes.add(Note(
+      ).cast<NoteModel>();
+      notes.add(NoteModel(
         date: date,
         description: description,
         title: title,
@@ -85,7 +85,7 @@ class AppCubit extends Cubit<AppStates> {
           HiveConstants.notesList,
           defaultValue: [],
         ),
-      ).cast<Note>();
+      ).cast<NoteModel>();
       emit(LoadedAppGetState(notes: notesReturn));
     } catch (e) {
       emit(FailedAppGetState());
@@ -100,7 +100,7 @@ class AppCubit extends Cubit<AppStates> {
           HiveConstants.notesDeletedList,
           defaultValue: [],
         ),
-      ).cast<Note>();
+      ).cast<NoteModel>();
       emit(LoadedAppDeletedState(
         deletedNotes: notesDeleted,
       ));
@@ -112,12 +112,12 @@ class AppCubit extends Cubit<AppStates> {
   void deleteNote({required int index}) {
     emit(LoadingDeleteNoteState());
     try {
-      List<Note> notes = List.from(
+      List<NoteModel> notes = List.from(
         _box.get(
           HiveConstants.notesList,
           defaultValue: [],
         ),
-      ).cast<Note>();
+      ).cast<NoteModel>();
       notesDeleted.add(notes.removeAt(index));
       print(notesDeleted);
       for (int i = index; i < notes.length; i++) {
@@ -134,12 +134,12 @@ class AppCubit extends Cubit<AppStates> {
   void deleteNoteFromDeletePage({required int index}) {
     emit(LoadingDeleteFromDeletePageNoteState());
     try {
-      List<Note> notes = List.from(
+      List<NoteModel> notes = List.from(
         _boxNoteDeleted.get(
           HiveConstants.notesDeletedList,
           defaultValue: [],
         ),
-      ).cast<Note>();
+      ).cast<NoteModel>();
 
       for (int i = index; i < notes.length; i++) {
         notes[i] = notes[i].decrementIndex();

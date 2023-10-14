@@ -21,16 +21,9 @@ class AddNotes extends StatefulWidget {
 }
 
 class _AddNotesState extends State<AddNotes> {
-  TextEditingController headNote = TextEditingController();
-
-  TextEditingController note = TextEditingController();
-
-  TextEditingController date = TextEditingController();
-
-  GlobalKey<FormState> formKey = GlobalKey<FormState>();
-
   @override
   Widget build(BuildContext context) {
+    AppCubit appCubit = AppCubit.get(context);
     return Scaffold(
       appBar: AppBar(
         titleSpacing: 0,
@@ -63,14 +56,14 @@ class _AddNotesState extends State<AddNotes> {
             child: GestureDetector(
               onTap: () async {
                 try {
-                  if (formKey.currentState?.validate() != null &&
-                      (headNote.text != '' &&
-                          note.text != '' &&
-                          date.text != '')) {
+                  if (appCubit.formKey.currentState?.validate() != null &&
+                      (appCubit.headNote.text != '' &&
+                          appCubit.note.text != '' &&
+                          appCubit.date.text != '')) {
                     BlocProvider.of<AppCubit>(context).addNote(
-                      title: headNote.text,
-                      description: note.text,
-                      date: date.text,
+                      title: appCubit.headNote.text,
+                      description: appCubit.note.text,
+                      date: appCubit.date.text,
                     );
 
                     Navigator.of(context).pushAndRemoveUntil(
@@ -93,39 +86,42 @@ class _AddNotesState extends State<AddNotes> {
           ),
         ],
       ),
-      body: Form(
-        key: formKey,
-        child: Column(
-          children: [
-            Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Card(
-                color: Colors.black12,
-                child: ListView(
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  children: [
-                    CustomTextForm(
-                      controller: headNote,
-                      hintText: 'HeadNote',
-                      icon: Icons.note_add_outlined,
-                    ),
-                    CustomTextForm(
-                      isNote: true,
-                      controller: note,
-                      hintText: 'note',
-                      icon: Icons.note_add,
-                    ),
-                    CustomTextForm(
-                      controller: date,
-                      hintText: 'date',
-                      icon: Icons.date_range,
-                    ),
-                  ],
+      body: SingleChildScrollView(
+        child: Form(
+          key: appCubit.formKey,
+          child: Column(
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Card(
+                  color: Colors.black12,
+                  child: ListView(
+                    shrinkWrap: true,
+                    physics: const NeverScrollableScrollPhysics(),
+                    children: [
+                      CustomTextForm(
+                        controller: appCubit.headNote,
+                        hintText: 'HeadNote',
+                        icon: Icons.note_add_outlined,
+                      ),
+                      CustomTextForm(
+                        isNote: true,
+                        controller: appCubit.note,
+                        hintText: 'note',
+                        icon: Icons.note_add,
+                      ),
+                      CustomTextForm(
+                        isDate: true,
+                        controller: appCubit.date,
+                        hintText: 'date',
+                        icon: Icons.date_range,
+                      ),
+                    ],
+                  ),
                 ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );

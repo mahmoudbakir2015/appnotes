@@ -1,5 +1,7 @@
 import 'package:appnotes/controller/cubit/app_states.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_datetime_picker_plus/flutter_datetime_picker_plus.dart';
 import 'package:hive/hive.dart';
 
 import '../../constant/hive_constant.dart';
@@ -8,9 +10,16 @@ import '../../model/notes/notes.dart';
 class AppCubit extends Cubit<AppStates> {
   AppCubit() : super(InitialAppState());
   static AppCubit get(context) => BlocProvider.of(context);
+  TextEditingController headNote = TextEditingController();
 
+  TextEditingController note = TextEditingController();
+
+  TextEditingController date = TextEditingController();
+
+  GlobalKey<FormState> formKey = GlobalKey<FormState>();
   final Box _box = Hive.box(HiveConstants.noteBox);
   final Box _boxNoteDeleted = Hive.box(HiveConstants.noteBoxDeleted);
+
   List<Note> notesReturn = [];
   List<Note> notesDeleted = [];
 
@@ -141,5 +150,22 @@ class AppCubit extends Cubit<AppStates> {
       emit(FailedDeleteNoteFromDeletePageState());
       print(e.toString());
     }
+  }
+
+  void getTimePicker({required BuildContext context}) {
+    DatePicker.showDatePicker(
+      context,
+      showTitleActions: true,
+      minTime: DateTime.now(),
+      maxTime: DateTime(2030, 6, 7),
+      onChanged: (time) {
+        date.text = time.toString().characters.take(10).toString();
+      },
+      onConfirm: (time) {
+        date.text = time.toString().characters.take(10).toString();
+      },
+      currentTime: DateTime.now(),
+      locale: LocaleType.en,
+    );
   }
 }

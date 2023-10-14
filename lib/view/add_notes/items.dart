@@ -1,5 +1,6 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:appnotes/constant/color.dart';
+import 'package:appnotes/controller/cubit/app_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
@@ -9,12 +10,14 @@ class CustomTextForm extends StatefulWidget {
   String hintText;
   IconData icon;
   bool isNote;
+  bool isDate;
   CustomTextForm({
     Key? key,
     required this.controller,
     required this.hintText,
     required this.icon,
     this.isNote = false,
+    this.isDate = false,
   }) : super(key: key);
 
   @override
@@ -24,6 +27,7 @@ class CustomTextForm extends StatefulWidget {
 class _CustomTextFormState extends State<CustomTextForm> {
   @override
   Widget build(BuildContext context) {
+    AppCubit appCubit = AppCubit.get(context);
     return Padding(
       padding: const EdgeInsets.only(
         top: 10,
@@ -31,6 +35,12 @@ class _CustomTextFormState extends State<CustomTextForm> {
         right: 10,
       ),
       child: TextFormField(
+        readOnly: widget.isDate ? true : false,
+        onTap: () {
+          if (widget.isDate == true) {
+            appCubit.getTimePicker(context: context);
+          }
+        },
         keyboardType: TextInputType.multiline,
         // ignore: body_might_complete_normally_nullable
         validator: (String? value) {

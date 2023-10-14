@@ -102,6 +102,8 @@ class CustomNoteCard extends StatelessWidget {
               Image.asset(imageUrl, height: 100, fit: BoxFit.cover),
               const Spacer(),
               Text(title,
+                  maxLines: 1,
+                  overflow: TextOverflow.ellipsis,
                   textAlign: TextAlign.center,
                   style: const TextStyle(
                     color: Colors.black,

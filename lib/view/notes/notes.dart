@@ -78,7 +78,7 @@ class _NotePageState extends State<NotePage> {
                       itemBuilder: (context, index) {
                         return CustomNoteCard(
                           title: state.notes[index].title,
-                          imageUrl: 'assets/images/note_1.jpg',
+                          imageUrl: 'assets/images/note_1.png',
                           subtitle: state.notes[index].description,
                           keyDismisable: index,
                           date: state.notes[index].date,

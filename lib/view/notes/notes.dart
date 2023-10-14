@@ -6,6 +6,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive/hive.dart';
 import '../../controller/cubit/app_states.dart';
 import '../../shared/widget/bottom_app_bar.dart';
+import '../../shared/widget/custom_note_card.dart';
 import '../../shared/widget/note_card.dart';
 import '../../shared/widget/sarch.dart';
 
@@ -65,22 +66,50 @@ class _NotePageState extends State<NotePage> {
               if (state is LoadedAppGetState &&
                   appCubit.notesReturn.isNotEmpty) {
                 return Expanded(
-                  child: ListView.separated(
-                    shrinkWrap: true,
-                    separatorBuilder: (context, index) => const SizedBox(
-                      height: 5,
-                    ),
-                    physics: const BouncingScrollPhysics(),
-                    itemBuilder: (context, index) {
-                      return NoteCard(
-                        title: state.notes[index].title,
-                        description: state.notes[index].description,
-                        date: state.notes[index].date,
-                        keyDismisable: index,
-                      );
-                    },
-                    itemCount: state.notes.length,
-                  ),
+                  child: GridView.builder(
+                      physics: const BouncingScrollPhysics(),
+                      itemCount: state.notes.length,
+                      gridDelegate:
+                          const SliverGridDelegateWithFixedCrossAxisCount(
+                        crossAxisCount: 2,
+                        crossAxisSpacing: 5.0,
+                        mainAxisSpacing: 15.0,
+                      ),
+                      itemBuilder: (context, index) {
+                        return CustomNoteCard(
+                          title: state.notes[index].title,
+                          imageUrl: 'assets/images/note_1.jpg',
+                          subtitle: state.notes[index].description,
+                          keyDismisable: index,
+                          date: state.notes[index].date,
+                          onPressed: () {},
+                        );
+                      }),
+                  // ListView.separated(
+                  //   shrinkWrap: true,
+                  //   separatorBuilder: (context, index) => const SizedBox(
+                  //     height: 5,
+                  //   ),
+                  //   physics: const BouncingScrollPhysics(),
+                  //   itemBuilder: (context, index) {
+                  //     return
+                  // CustomNoteCard(
+                  //       title: state.notes[index].title,
+                  //       imageUrl: 'assets/images/note_1.jpg',
+                  //       subtitle: state.notes[index].description,
+                  //       keyDismisable: index,
+                  //       date: state.notes[index].date,
+                  //       onPressed: () {},
+                  //     );
+                  //     // NoteCard(
+                  //     //   title: state.notes[index].title,
+                  //     //   description: state.notes[index].description,
+                  //     //   date: state.notes[index].date,
+                  //     //   keyDismisable: index,
+                  //     // );
+                  //   },
+                  //   itemCount: state.notes.length,
+                  // ),
                 );
               } else {
                 return const Center(

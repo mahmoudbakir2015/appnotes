@@ -1,30 +1,54 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'package:appnotes/controller/cubit/cubit_note_deleted/deleted_note_cubit.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:hive/hive.dart';
+
 import 'package:appnotes/constant/color.dart';
-import 'package:appnotes/controller/cubit/app_cubit.dart';
-import 'package:appnotes/controller/cubit/app_states.dart';
+import 'package:appnotes/controller/cubit/app_cubit/app_cubit.dart';
+import 'package:appnotes/controller/cubit/app_cubit/app_states.dart';
 import 'package:appnotes/shared/widget/floating_button.dart';
 import 'package:appnotes/shared/widget/sarch.dart';
 import 'package:appnotes/view/deleted_notes/deleted_notes.dart';
 import 'package:appnotes/view/home/items.dart';
-import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:hive/hive.dart';
+
+import '../../controller/cubit/cubit_note/note_cubit.dart';
 import '../../shared/widget/bottom_app_bar.dart';
 import '../notes/notes.dart';
 
 // ignore: must_be_immutable
-class Home extends StatelessWidget {
-  Home({super.key, required this.box});
-  late Box box;
-  int counterNote = 0;
-  int counterNoteDeleted = 0;
+class Home extends StatefulWidget {
+  const Home({
+    Key? key,
+    required this.box,
+    required this.boxDelted,
+  }) : super(key: key);
+  final Box box;
+  final Box boxDelted;
+
+  @override
+  State<Home> createState() => _HomeState();
+}
+
+class _HomeState extends State<Home> {
+  @override
+  void initState() {
+    BlocProvider.of<NoteCubit>(context).getNotes();
+    BlocProvider.of<DeletedCubit>(context).getDeletedNotes();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.all(8.0),
-        child: ListView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            const SizedBox(
+              height: 40,
+            ),
             const Text(
               "Folders",
               style: TextStyle(
@@ -43,50 +67,50 @@ class Home extends StatelessWidget {
                 style: TextStyle(color: MyColors.secondaryColor),
               ),
             ),
-            BlocConsumer<AppCubit, AppStates>(listener: (context, state) {
-              AppCubit cubit = AppCubit.get(context);
-              counterNote = cubit.notesReturn.length;
-            }, builder: (context, state) {
-              return Folder(
-                onTap: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => NotePage(
-                        box: box,
-                      ),
-                    ),
+            BlocConsumer<AppCubit, AppStates>(
+                listener: (context, state) {},
+                builder: (context, state) {
+                  return Folder(
+                    onTap: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => NotePage(
+                            box: widget.box,
+                            boxDelted: widget.boxDelted,
+                          ),
+                        ),
+                      );
+                    },
+                    name: 'Notes',
+                    icon: Icons.folder,
+                    counter: '${AppCubit.notesReturn.length}',
                   );
-                },
-                name: 'Notes',
-                icon: Icons.folder,
-                counter: '$counterNote',
-              );
-            }),
-            BlocConsumer<AppCubit, AppStates>(listener: (context, state) {
-              AppCubit cubit = AppCubit.get(context);
-              counterNoteDeleted = cubit.notesDeleted.length;
-            }, builder: (context, state) {
-              return Folder(
-                onTap: () {
-                  Navigator.of(context).push(
-                    MaterialPageRoute(
-                      builder: (context) => Deleted(
-                        box: box,
-                      ),
-                    ),
+                }),
+            BlocConsumer<AppCubit, AppStates>(
+                listener: (context, state) {},
+                builder: (context, state) {
+                  return Folder(
+                    onTap: () {
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (context) => Deleted(
+                            boxDelted: widget.boxDelted,
+                          ),
+                        ),
+                      );
+                    },
+                    name: 'Deleted',
+                    icon: Icons.delete,
+                    counter: '${AppCubit.notesDeleted.length}',
                   );
-                },
-                name: 'Deleted',
-                icon: Icons.delete,
-                counter: '$counterNoteDeleted',
-              );
-            }),
+                }),
           ],
         ),
       ),
       floatingActionButton: buildFloatingButton(
         context: context,
-        box: box,
+        box: widget.box,
+        boxDeleted: widget.boxDelted,
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       bottomNavigationBar: buildBottomBar(),

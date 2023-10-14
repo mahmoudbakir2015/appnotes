@@ -1,6 +1,8 @@
 import 'package:appnotes/constant/color.dart';
 import 'package:appnotes/constant/hive_constant.dart';
-import 'package:appnotes/controller/cubit/app_cubit.dart';
+import 'package:appnotes/controller/cubit/app_cubit/app_cubit.dart';
+import 'package:appnotes/controller/cubit/cubit_note/note_cubit.dart';
+import 'package:appnotes/controller/cubit/cubit_note_deleted/deleted_note_cubit.dart';
 import 'package:appnotes/model/notes/notes_adapter.dart';
 import 'package:appnotes/shared/bloc_observer.dart';
 import 'package:appnotes/view/home/home.dart';
@@ -17,8 +19,18 @@ void main() async {
   Box box = await Hive.openBox(HiveConstants.noteBox);
   Box boxDeleted = await Hive.openBox(HiveConstants.noteBoxDeleted);
   runApp(
-    BlocProvider(
-      create: (context) => AppCubit(),
+    MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (context) => AppCubit(),
+        ),
+        BlocProvider(
+          create: (context) => DeletedCubit(),
+        ),
+        BlocProvider(
+          create: (context) => NoteCubit(),
+        ),
+      ],
       child: MaterialApp(
         theme: ThemeData(
             scaffoldBackgroundColor: MyColors.backgroundColor,
@@ -33,6 +45,7 @@ void main() async {
         debugShowCheckedModeBanner: false,
         home: Home(
           box: box,
+          boxDelted: boxDeleted,
         ),
       ),
     ),

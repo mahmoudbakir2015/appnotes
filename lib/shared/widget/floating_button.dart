@@ -3,7 +3,10 @@ import 'package:appnotes/view/add_notes/addNote.dart';
 import 'package:flutter/material.dart';
 import 'package:hive/hive.dart';
 
-buildFloatingButton({required BuildContext context, required Box box}) {
+buildFloatingButton(
+    {required BuildContext context,
+    required Box box,
+    required Box boxDeleted}) {
   return FloatingActionButton(
     backgroundColor: MyColors.defaultColor,
     mini: false,
@@ -13,6 +16,7 @@ buildFloatingButton({required BuildContext context, required Box box}) {
         MaterialPageRoute(
           builder: (context) => AddNotes(
             box: box,
+            boxDeleted: boxDeleted,
           ),
         ),
       );

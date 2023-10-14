@@ -1,20 +1,25 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 // ignore_for_file: file_names
 
-import 'package:appnotes/controller/cubit/app_cubit.dart';
-import 'package:appnotes/view/add_notes/items.dart';
-import 'package:appnotes/view/home/home.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
 import 'package:hive/hive.dart';
+
+import 'package:appnotes/controller/cubit/app_cubit/app_cubit.dart';
+import 'package:appnotes/view/add_notes/items.dart';
+import 'package:appnotes/view/home/home.dart';
+
+import '../../controller/cubit/cubit_note/note_cubit.dart';
 
 // ignore: must_be_immutable
 class AddNotes extends StatefulWidget {
   final Box box;
+  final Box boxDeleted;
   const AddNotes({
-    super.key,
+    Key? key,
     required this.box,
-  });
+    required this.boxDeleted,
+  }) : super(key: key);
 
   @override
   State<AddNotes> createState() => _AddNotesState();
@@ -36,6 +41,7 @@ class _AddNotesState extends State<AddNotes> {
               MaterialPageRoute(
                 builder: (context) => Home(
                   box: widget.box,
+                  boxDelted: widget.boxDeleted,
                 ),
               ),
               (route) => false,
@@ -46,9 +52,6 @@ class _AddNotesState extends State<AddNotes> {
           ),
         ),
         actions: [
-          const Icon(
-            Icons.settings,
-          ),
           const SizedBox(
             width: 10,
           ),
@@ -60,7 +63,7 @@ class _AddNotesState extends State<AddNotes> {
                       (appCubit.headNote.text != '' &&
                           appCubit.note.text != '' &&
                           appCubit.date.text != '')) {
-                    BlocProvider.of<AppCubit>(context).addNote(
+                    BlocProvider.of<NoteCubit>(context).addNote(
                       title: appCubit.headNote.text,
                       description: appCubit.note.text,
                       date: appCubit.date.text,
@@ -70,8 +73,10 @@ class _AddNotesState extends State<AddNotes> {
                         MaterialPageRoute(
                             builder: (context) => Home(
                                   box: widget.box,
+                                  boxDelted: widget.boxDeleted,
                                 )),
                         (route) => false);
+                    appCubit.changeState();
                   } else {
                     buildToast(error: "pls fill all field");
 
@@ -83,6 +88,9 @@ class _AddNotesState extends State<AddNotes> {
               },
               child: const Text("Done"),
             ),
+          ),
+          const SizedBox(
+            width: 10,
           ),
         ],
       ),

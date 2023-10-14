@@ -1,17 +1,18 @@
 import 'package:appnotes/constant/color.dart';
-import 'package:appnotes/controller/cubit/app_cubit.dart';
+import 'package:appnotes/controller/cubit/app_cubit/app_cubit.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive/hive.dart';
-import '../../controller/cubit/app_states.dart';
+import '../../controller/cubit/cubit_note_deleted/deleted_note_cubit.dart';
+import '../../controller/cubit/cubit_note_deleted/deleted_note_states.dart';
 import '../../shared/widget/note_card.dart';
 import '../../shared/widget/sarch.dart';
 
 // ignore: must_be_immutable
 class Deleted extends StatefulWidget {
-  final Box box;
+  final Box boxDelted;
 
-  const Deleted({super.key, required this.box});
+  const Deleted({super.key, required this.boxDelted});
 
   @override
   State<Deleted> createState() => _DeletedState();
@@ -20,7 +21,7 @@ class Deleted extends StatefulWidget {
 class _DeletedState extends State<Deleted> {
   @override
   void initState() {
-    BlocProvider.of<AppCubit>(context).getDeletedNotes();
+    BlocProvider.of<DeletedCubit>(context).getDeletedNotes();
     super.initState();
   }
 
@@ -34,7 +35,9 @@ class _DeletedState extends State<Deleted> {
         ),
         leading: GestureDetector(
           onTap: () {
+            AppCubit appCubit = AppCubit.get(context);
             Navigator.pop(context);
+            appCubit.changeState();
           },
           child: const Icon(
             Icons.arrow_back_ios,
@@ -57,11 +60,9 @@ class _DeletedState extends State<Deleted> {
               padding: EdgeInsets.all(8.0),
               child: SearchForm(),
             ),
-            BlocBuilder<AppCubit, AppStates>(builder: (context, state) {
-              AppCubit appCubit = AppCubit.get(context);
-
-              if (state is LoadedAppDeletedState &&
-                  appCubit.notesDeleted.isNotEmpty) {
+            BlocBuilder<DeletedCubit, NoteDeletedStates>(
+                builder: (context, state) {
+              if (AppCubit.notesDeleted.isNotEmpty) {
                 return Expanded(
                   child: ListView.separated(
                     shrinkWrap: true,
@@ -72,13 +73,13 @@ class _DeletedState extends State<Deleted> {
                     itemBuilder: (context, index) {
                       return NoteCard(
                         isNoteCard: false,
-                        title: state.deletedNotes[index].title,
-                        description: state.deletedNotes[index].description,
-                        date: state.deletedNotes[index].date,
-                        keyDismisable: index,
+                        title: AppCubit.notesDeleted[index].title,
+                        description: AppCubit.notesDeleted[index].description,
+                        date: AppCubit.notesDeleted[index].date,
+                        keyDismisable: AppCubit.notesDeleted.length,
                       );
                     },
-                    itemCount: state.deletedNotes.length,
+                    itemCount: AppCubit.notesDeleted.length,
                   ),
                 );
               } else {

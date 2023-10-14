@@ -1,10 +1,10 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-
-import 'package:appnotes/controller/cubit/app_cubit.dart';
-
 import '../../constant/color.dart';
+import '../../controller/cubit/cubit_note/note_cubit.dart';
+
+import '../../controller/cubit/cubit_note_deleted/deleted_note_cubit.dart';
 
 // ignore: must_be_immutable
 class NoteCard extends StatelessWidget {
@@ -54,25 +54,26 @@ class NoteCard extends StatelessWidget {
       key: Key('$keyDismisable'),
       onDismissed: ((direction) {
         if (isNoteCard == true) {
-          BlocProvider.of<AppCubit>(context).deleteNote(
+          BlocProvider.of<NoteCubit>(context).deleteNote(
             index: keyDismisable,
           );
-          BlocProvider.of<AppCubit>(context).addNoteDeleted(
+          BlocProvider.of<DeletedCubit>(context).addNoteDeleted(
             title: title,
             description: description,
             date: date,
           );
-        } else {
+        }
+        if (isNoteCard == false) {
           if (DismissDirection.startToEnd == direction) {
-            BlocProvider.of<AppCubit>(context)
+            BlocProvider.of<DeletedCubit>(context)
                 .deleteNoteFromDeletePage(index: keyDismisable);
           } else {
-            BlocProvider.of<AppCubit>(context).addNote(
+            BlocProvider.of<NoteCubit>(context).addNote(
               title: title,
               description: description,
               date: date,
             );
-            BlocProvider.of<AppCubit>(context)
+            BlocProvider.of<DeletedCubit>(context)
                 .deleteNoteFromDeletePage(index: keyDismisable);
           }
         }

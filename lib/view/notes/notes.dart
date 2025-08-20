@@ -6,7 +6,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hive/hive.dart';
 import '../../controller/cubit/cubit_note/note_cubit.dart';
 import '../../controller/cubit/cubit_note/note_states.dart';
-import '../../controller/cubit/cubit_note_deleted/deleted_note_states.dart';
 import '../../shared/widget/bottom_app_bar.dart';
 import '../../shared/widget/custom_note_card.dart';
 import '../../shared/widget/sarch.dart';

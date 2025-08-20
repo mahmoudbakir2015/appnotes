@@ -86,7 +86,13 @@ class _AddNotesState extends State<AddNotes> {
                   buildToast(error: e.toString());
                 }
               },
-              child: const Text("Done"),
+              child: const Text(
+                "Done",
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  color: Colors.white,
+                ),
+              ),
             ),
           ),
           const SizedBox(
